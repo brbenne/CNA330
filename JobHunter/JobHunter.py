@@ -1,25 +1,37 @@
 # This script pulls from a job website and stores positions into a database. If there is a new posting it notifies the user.
-# CNA 330
-# Zachary Rubin, zrubin@rtc.edu
+# Brandon Bennett, babennett@student.rtc.edu (I NEVER CHECK THIS THING)(SLACK PLZ)(or message at 440-242-7914)
+# CCNA337, Fall 2019
+
+#Colaborated with Sam, Emily, Simeon
+
 import mysql.connector
 import sys
 import json
 import urllib.request
 import os
 import time
-
+import mysql.connector
 # Connect to database
 # You may need to edit the connect function based on your local settings.
 def connect_to_sql():
     conn = mysql.connector.connect(user='root', password='',
-                                  host='127.0.0.1',
-                                  database='cna330')
+                                   host='127.0.0.1', port=3307,
+                                   database='cna330')
     return conn
 
 # Create the table structure
 def create_tables(cursor, table):
     ## Add your code here. Starter code below
-    cursor.execute('''CREATE TABLE IF NOT EXISTS tablename (id INT PRIMARY KEY); ''')
+    cursor.execute("CREATE TABLE IF NOT EXISTS"
+                   "JobHunter (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   "Type VARCHAR(10)"
+                   "Title VARCHAR(100)"
+                   "Description TEXT"
+                   "Job_ID VARCHAR(33)"
+                   "Created_at DATE"
+                   "Company VARCHAR(100)"
+                   "Location VARCHAR(50)"
+                   "How-to-apply VARCHAR(100))")
     return
 
 # Query the database.
@@ -31,13 +43,13 @@ def query_sql(cursor, query):
 # Add a new job
 def add_new_job(cursor, jobdetails):
     ## Add your code here
-    query = "INSERT INTO"
+    query = "INSERT INTO JobHunter(Type, Title, Description, Job_ID, Created_at, Company, Location, How-to-apply)"
     return query_sql(cursor, query)
 
 # Check if new job
 def check_if_job_exists(cursor, jobdetails):
     ## Add your code here
-    query = "SELECT"
+    query = "SELECT * FROM JobHunter"
     return query_sql(cursor, query)
 
 def delete_job(cursor, jobdetails):
@@ -97,8 +109,8 @@ def main():
     conn = connect_to_sql()
     cursor = conn.cursor()
     create_tables(cursor, "table")
-    # Load text file and store arguments into dictionary
-    arg_dict = load_config_file(sys.argv[1])
+    #Load text file and store arguments into dictionary
+    arg_dict = 0
     while(1):
         jobhunt(arg_dict)
         time.sleep(3600) # Sleep for 1h
