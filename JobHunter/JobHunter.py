@@ -10,7 +10,8 @@ import json
 import urllib.request
 import os
 import time
-import mysql.connector
+
+
 # Connect to database
 # You may need to edit the connect function based on your local settings.
 def connect_to_sql():
@@ -44,6 +45,7 @@ def query_sql(cursor, query):
 def add_new_job(cursor, jobdetails):
     ## Add your code here
     query = "INSERT INTO JobHunter(Type, Title, Description, Job_ID, Created_at, Company, Location, How-to-apply)"
+            #"VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
     return query_sql(cursor, query)
 
 # Check if new job
@@ -93,8 +95,13 @@ def load_config_file(filename):
 def jobhunt(arg_dict):
     # Fetch jobs from website
     jobpage = fetch_new_jobs(arg_dict)
-    # print (jobpage)
+    print(jobpage[0])
     ## Add your code here to parse the job page
+    with urllib.request.urlopen("https://jobs.github.com/positions.json?location=seattle") as url:
+        json_data = json.loads(url.read().decode())
+        i = (json.dumps(json_data, indent=4, sort_keys=True))
+        with open('jobdata.txt', "w") as f_file:
+            f_file.write(i)  # Gabe help with this
 
     ## Add in your code here to check if the job already exists in the DB
 
